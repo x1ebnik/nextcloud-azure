@@ -49,7 +49,7 @@
     "subnetPrefix": "10.0.0.0/24",
     "storageAccountType": "Standard_LRS",
     "publicIPAddressName": "nextcloudPublicIP",
-    "publicIPAddressType": "Dynamic",
+    "publicIPAddressType": "Static",
     "vmStorageAccountContainerName": "vhds",
     "vmName": "nextcloudVM",
     "vmSize": "Standard_B1s",
@@ -72,6 +72,7 @@
 		"allowBlobPublicAccess": false,
 		"isNfsV3Enabled": true,
 		"isHnsEnabled": true,
+		"minimumTlsVersion": "TLS1_2",
 		"networkAcls": {
 			"defaultAction": "deny"
 		}		
@@ -87,10 +88,14 @@
       ]
     },	
     {
-      "apiVersion": "[variables('apiVersion')]",
+      "apiVersion": "2017-08-01",
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "[variables('publicIPAddressName')]",
       "location": "[resourceGroup().location]",
+	   "sku": {
+       "name": "Standard",
+       "tier": "Regional"
+            },
       "properties": {
         "publicIPAllocationMethod": "[variables('publicIPAddressType')]",
         "dnsSettings": {
