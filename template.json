@@ -258,6 +258,7 @@
 			"type": "CustomScript",
 			"typeHandlerVersion": "2.0",
 			"autoUpgradeMinorVersion": true,
+			"forceUpdateTag": "v.1.0",
 			"settings": {
 				"fileUris": "[split('https://raw.githubusercontent.com/x1ebnik/nextcloud-azure/main/install.sh', ' ')]",
 				"commandToExecute": "[concat('bash install.sh --hostname=', parameters('dnsNameForPublicIP'), '.', resourceGroup().location, '.cloudapp.azure.com --password=', parameters('adminPassword'), ' --username=', parameters('adminUsername'), ' --email=',  parameters('sslEmail'), ' --storageaccount=', variables('storageAccountName'), ' --container=', variables('containerName'))]"
