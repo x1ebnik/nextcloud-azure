@@ -74,8 +74,16 @@
 		"isHnsEnabled": true,
 		"networkAcls": {
 			"defaultAction": "deny"
-		}		
-
+		},		
+                "containerDeleteRetentionPolicy": {
+                    "enabled": true,
+                    "days": 7
+                },
+                "deleteRetentionPolicy": {
+                    "allowPermanentDelete": false,
+                    "enabled": true,
+                    "days": 7
+                }
 	  }
     },
     {
