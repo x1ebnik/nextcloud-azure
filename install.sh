@@ -120,4 +120,22 @@ a2enmod rewrite
 
 #Obtain a Certificate from Let's Encrypt
 certbot run -d $HOSTNAME --agree-tos --apache -m $EMAIL -n
+
+#Apache additional security settings ()
+sed -i '/ErrorLog/i \
+<IfModule mod_headers.c>\
+Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains"\
+Header always set Referrer-Policy "strict-origin-when-cross-origin"\
+Header always set X-Content-Type-Options "nosniff"\
+Header always set X-Frame-Options "SAMEORIGIN"\
+</IfModule>\
+\
+SSLEngine on\
+SSLOptions +StrictRequire\
+SSLProtocol -all +TLSv1.3 +TLSv1.2\ \
+' /etc/apache2/sites-available/nextcloud-le-ssl.conf
+
+a2enmod headers
+
+#restart Apache
 systemctl restart apache2
