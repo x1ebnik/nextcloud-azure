@@ -36,18 +36,36 @@ do
 	esac
 done
 
+#Create apt-get wrapper to let apt-get commands to execute sequentially
+tee -a /usr/local/sbin << EOF
+#!/bin/bash
+i=0
+tput sc
+while fuser /var/lib/dpkg/lock >/dev/null 2>&1 ; do
+    case $(($i % 4)) in
+        0 ) j="-" ;;
+        1 ) j="\\" ;;
+        2 ) j="|" ;;
+        3 ) j="/" ;;
+    esac
+    tput rc
+    echo -en "\r[$j] Waiting for other software managers to finish..." 
+    sleep 0.5
+    ((i=i+1))
+done 
+/usr/bin/apt-get "$@"
+EOF
 
 #Install Dependencies
-export DEBIAN_FRONTEND=noninteractive
-export DEBIAN_PRIORITY=critical
-sudo -E apt-get -qy update
-sudo -E apt-get -qy -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" upgrade
-sudo -E apt-get -qy autoclean
-
+#export DEBIAN_FRONTEND=noninteractive
+#export DEBIAN_PRIORITY=critical
+#sudo -E apt-get -qy update
+#sudo -E apt-get -qy -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" upgrade
+#sudo -E apt-get -qy autoclean
 #sudo sed "/#\$nrconf{restart} = 'i';/s/.*/\$nrconf{restart} = 'a';/" /etc/needrestart/needrestart.conf #make install unattended
-#apt-get update
-#apt-get upgrade -y
-sudo apt-get install -y  php8.1 php8.1-cli php8.1-common php8.1-imap php8.1-redis php8.1-snmp php8.1-xml php8.1-zip php8.1-mbstring php8.1-curl php8.1-gd php8.1-mysql apache2 mariadb-server certbot nfs-common python3-certbot-apache unzip php-intl
+apt-get update
+apt-get upgrade -y
+apt-get install -y  php8.1 php8.1-cli php8.1-common php8.1-imap php8.1-redis php8.1-snmp php8.1-xml php8.1-zip php8.1-mbstring php8.1-curl php8.1-gd php8.1-mysql apache2 mariadb-server certbot nfs-common python3-certbot-apache unzip php-intl
 
 #Create the database and user
 DBPASSWORD=$(openssl rand -base64 14)
@@ -62,9 +80,9 @@ mount /mnt/files
 #Download Nextcloud
 cd /var/www/html
 # wget https://download.nextcloud.com/server/releases/nextcloud-24.0.1.zip
-wget https://download.nextcloud.com/server/releases/nextcloud-27.1.4.zip
+wget https://download.nextcloud.com/server/releases/nextcloud-28.0.1.zip
 # unzip nextcloud-24.0.1.zip
-unzip nextcloud-27.1.4.zip
+unzip nextcloud-28.0.1.zip
 chown -R root:root nextcloud
 cd nextcloud
 
