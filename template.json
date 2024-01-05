@@ -75,16 +75,7 @@
 		"minimumTlsVersion": "TLS1_2",
 		"networkAcls": {
 			"defaultAction": "deny"
-		},
-		 "containerDeleteRetentionPolicy": {
-                 "enabled": true,
-                 "days": 7
-                },
-                "deleteRetentionPolicy": {
-                "allowPermanentDelete": false,
-                 "enabled": true,
-                 "days": 7
-                }
+		}
 	  }
     },
 {
@@ -129,7 +120,18 @@
       "name": "[format('{0}/default/{1}', variables('storageAccountName'), variables('containerName'))]",
       "dependsOn": [
         "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
-      ]
+      ],
+	 "properties": {
+     		"deleteRetentionPolicy": {
+        		 "allowPermanentDelete": false,
+        		 "enabled": true,
+        		 "days": 7
+    				 },
+     		"containerDeleteRetentionPolicy": {
+      			 "enabled": true,
+       			 "days": 7
+    			 }
+ 		      }    
     },	
     {
       "apiVersion": "2017-08-01",
