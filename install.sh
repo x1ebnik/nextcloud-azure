@@ -56,6 +56,8 @@ done
 /usr/bin/apt-get "$@"
 EOF
 
+sleep 20s
+
 #Install Dependencies
 apt-get update
 apt-get upgrade -y
