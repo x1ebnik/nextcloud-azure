@@ -68,9 +68,9 @@ DBPASSWORD=$(openssl rand -base64 14)
 mysql -e "CREATE DATABASE nextcloud;GRANT ALL PRIVILEGES ON nextcloud.* TO 'nextcloud'@'localhost' IDENTIFIED BY '$DBPASSWORD';FLUSH PRIVILEGES;"
 
 #Mount the file storage
-mkdir -p /mnt/files
-echo "$STORAGEACCOUNT.privatelink.blob.core.windows.net:/$STORAGEACCOUNT/$CONTAINER  /mnt/files    nfs defaults,sec=sys,vers=3,nolock,proto=tcp,nofail    0 0" >> /etc/fstab 
-mount /mnt/files
+mkdir -p /mnt/filesx
+echo "$STORAGEACCOUNT.privatelink.blob.core.windows.net:/$STORAGEACCOUNT/$CONTAINER  /mnt/filesx    nfs defaults,sec=sys,vers=3,nolock,proto=tcp,nofail    0 0" >> /etc/fstab 
+mount /mnt/filesx
 
 
 #Download Nextcloud
@@ -83,13 +83,13 @@ chown -R root:root nextcloud
 cd nextcloud
 
 #Install Nextcloud
-php occ  maintenance:install --database "mysql" --database-name "nextcloud"  --database-user "nextcloud" --database-pass "$DBPASSWORD" --admin-user "$USERNAME" --admin-pass "$PASSWORD" --data-dir /mnt/files
+php occ  maintenance:install --database "mysql" --database-name "nextcloud"  --database-user "nextcloud" --database-pass "$DBPASSWORD" --admin-user "$USERNAME" --admin-pass "$PASSWORD" --data-dir /mnt/filesx
 sed -i "s/0 => 'localhost',/0 => '$HOSTNAME',/g" ./config/config.php
 sed -i "s/  'overwrite.cli.url' => 'https:\/\/localhost',/  'overwrite.cli.url' => 'http:\/\/$HOSTNAME',/g" ./config/config.php
 
 cd ..
 chown -R www-data:www-data nextcloud
-chown -R www-data:www-data /mnt/files
+chown -R www-data:www-data /mnt/filesx
 
 #Configure Apache
 tee -a /etc/apache2/sites-available/nextcloud.conf << EOF
