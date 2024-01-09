@@ -29,7 +29,7 @@
   },
   "variables": {
     "storageAccountName": "[concat(uniquestring(resourceGroup().id),'storage')]",
-    "containerName": "files",
+    "containerName": "filesx",
 	"blobStorageAccountPrivateEndpointName": "nextcloudPE",
 	"blobStorageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
 	"blobPublicDNSZoneForwarder": "[concat('.blob.', environment().suffixes.storage)]",
